@@ -21,6 +21,13 @@ class Weather < Struct.new(:location,:data)
       end
       data << c
     end
+    xml.xpath("//current_conditions").each do |inf|
+      c = CurrentWeatherData.new
+      inf.children.each do |child|
+        c.send("#{child.name.to_s}=", child['data'])
+      end
+      data << c
+    end
     return data
   end
 

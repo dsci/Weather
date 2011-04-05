@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
-
 describe "Weather" do
+  include Helper
 
   it "should fetch some data" do
     info = Weather.run(:location => "04157")
@@ -10,6 +10,8 @@ describe "Weather" do
     data.first.low.should_not be_nil
     data.first.high.should_not be_nil
     data.first.is_a?(WeatherData).should be true
+    data.last.is_a?(CurrentWeatherData).should be true
+    data.last.temp_c.should_not be_nil
   end
 
   context "WeatherData converter" do
@@ -40,4 +42,13 @@ describe "Weather" do
     
   end
 
+  context "Helper" do
+    it "should return a string" do
+      string=box("Leipzig")
+      string.is_a?(String).should be true
+      string.include?("Leipzig").should be true
+      string.include?(".gif").should be true
+    end
+    
+  end
 end

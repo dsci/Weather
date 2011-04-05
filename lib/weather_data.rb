@@ -15,3 +15,6 @@ class WeatherData < Struct.new(:day_of_week,:low,:high, :icon, :condition)
     return (r - 32)/ 1.8
   end
 end
+
+class CurrentWeatherData < Struct.new(:condition, :temp_f, :temp_c, :humidity, :icon, :wind_condition)
+end
