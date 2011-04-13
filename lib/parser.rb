@@ -12,23 +12,18 @@ class Weather < Struct.new(:location,:data)
 
   def parse
     xml = Nokogiri::XML(GoogleWeatherFetcher.fetch(location))
-    data = []
-    xml.xpath("//forecast_conditions").each do |inf|
-      c = WeatherData.new
-      inf.children.each do |child|
-        #puts "#{child.name}/#{child['data']}"
-        c.send("#{child.name.to_s}=",child['data'])
+    data={:day_of_week=>"",:low=>"",:high=>"", :icon=>"", :condition=>"", :temp_c=>"", :humidity=>"", :wind_condition=>"" }
+    xml.xpath("//forecast_conditions").first.children.each do |child|
+      if(data.has_key?("#{child.name.to_s}".to_sym))
+        data["#{child.name.to_s}".to_sym]=child['data']
       end
-      data << c
     end
-    xml.xpath("//current_conditions").each do |inf|
-      c = CurrentWeatherData.new
-      inf.children.each do |child|
-        c.send("#{child.name.to_s}=", child['data'])
+    xml.xpath("//current_conditions").children.each do |child|
+      if(data.has_key?("#{child.name.to_s}".to_sym))
+        data["#{child.name.to_s}".to_sym]=child['data']
       end
-      data << c
     end
-    return data
+    return WeatherData.new(data)
   end
 
 end
